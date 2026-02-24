@@ -34,6 +34,12 @@ async updateStudent(id: number, data: any) {
      WHERE id = ?`,
     [name, class_id, parent_phone, status, id]
   );
+},
+async updateStudentStatus(id: number, status: string) {
+  await db.query(
+    "UPDATE students SET status = ? WHERE id = ?",
+    [status, id]
+  );
 }
 
 };
