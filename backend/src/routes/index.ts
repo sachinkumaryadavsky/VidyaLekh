@@ -7,5 +7,5 @@ export async function Routes(app: FastifyInstance) {
   app.get("/students", studentController.getStudents);
   app.get("/students/:id", studentController.getStudentById);
   app.put("/students/:id", studentController.updateStudent);
-
+  app.patch("/students/:id/status", studentController.updateStudentStatus);
 }
