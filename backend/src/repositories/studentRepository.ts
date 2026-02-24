@@ -24,6 +24,16 @@ export const studentRepository = {
   );
 
   return rows[0] || null;
+},
+async updateStudent(id: number, data: any) {
+  const { name, class_id, parent_phone, status } = data;
+
+  await db.query(
+    `UPDATE students 
+     SET name = ?, class_id = ?, parent_phone = ?, status = ?
+     WHERE id = ?`,
+    [name, class_id, parent_phone, status, id]
+  );
 }
 
 };

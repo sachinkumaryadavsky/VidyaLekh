@@ -27,6 +27,21 @@ export const studentService = {
   }
 
   return student;
+},
+async updateStudent(id: number, data: any) {
+  if (!id) {
+    throw new Error("Student ID is required");
+  }
+
+  const existingStudent = await studentRepository.getStudentById(id);
+
+  if (!existingStudent) {
+    throw new Error("Student not found");
+  }
+
+  await studentRepository.updateStudent(id, data);
+
+  return { message: "Student updated successfully" };
 }
 
 };
