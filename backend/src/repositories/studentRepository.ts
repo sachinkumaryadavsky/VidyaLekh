@@ -15,6 +15,15 @@ export const studentRepository = {
   async getAllStudents() {
     const [rows] = await db.query("SELECT * FROM students");
     return rows;
-  }
+  },
+
+  async getStudentById(id: number) {
+  const [rows]: any = await db.query(
+    "SELECT * FROM students WHERE id = ?",
+    [id]
+  );
+
+  return rows[0] || null;
+}
 
 };

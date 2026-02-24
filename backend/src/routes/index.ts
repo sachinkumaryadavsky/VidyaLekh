@@ -5,5 +5,6 @@ export async function Routes(app: FastifyInstance) {
 
   app.post("/students", studentController.createStudent);
   app.get("/students", studentController.getStudents);
+  app.get("/students/:id", studentController.getStudentById);
 
 }

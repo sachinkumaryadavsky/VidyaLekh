@@ -21,6 +21,20 @@ export const studentController = {
       error: error.message
     });
   }
+},
+
+async getStudentById(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const { id } = request.params as any;
+
+    const student = await studentService.getStudentById(Number(id));
+
+    reply.send(student);
+  } catch (error: any) {
+    reply.status(400).send({
+      error: error.message
+    });
+  }
 }
 
 };

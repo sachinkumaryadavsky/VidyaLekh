@@ -14,6 +14,19 @@ export const studentService = {
 
   async getStudents() {
     return await studentRepository.getAllStudents();
+  },
+  async getStudentById(id: number) {
+  if (!id) {
+    throw new Error("Student ID is required");
   }
+
+  const student = await studentRepository.getStudentById(id);
+
+  if (!student) {
+    throw new Error("Student not found");
+  }
+
+  return student;
+}
 
 };
