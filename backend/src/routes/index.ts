@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { studentController } from "../controllers/studentController";
 import { attendanceController } from "../controllers/attendanceController";
+import { examController } from "../controllers/examController";
 
 
 export async function Routes(app: FastifyInstance) {
@@ -34,5 +35,15 @@ app.get(
 app.get(
   "/dashboard/attendance",
   attendanceController.getAttendanceDashboard
+);
+
+//exam
+
+  app.post("/exams", examController.createExam);
+  app.post("/subjects", examController.createSubject);
+  app.post("/marks/bulk", examController.bulkEnterMarks);
+  app.get(
+  "/results/student/:studentId/exam/:examId",
+  examController.getStudentResult
 );
 }
