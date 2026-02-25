@@ -113,6 +113,54 @@ async getClassAttendanceSummary(classId: number, date: string) {
     absent: summary.absent_count,
     attendance_percentage: Number(percentage)
   };
+},
+
+async getDefaulters(classId: number, threshold: number = 75) {
+
+  if (!classId) {
+    throw new Error("Class ID is required");
+  }
+
+  return await attendanceRepository.getDefaultersByClass(
+    classId,
+    threshold
+  );
+},
+async getAttendanceDashboard(date?: string) {
+
+  const targetDate =
+    date || new Date().toISOString().split("T")[0];
+
+  const totalStudents =
+    await attendanceRepository.getTotalStudents();
+
+  const todayStats =
+    await attendanceRepository.getTodayAttendanceStats(targetDate);
+
+  const lowAttendance =
+    await attendanceRepository.getLowAttendanceCount(75);
+
+  const present = Number(todayStats?.present_today || 0);
+
+  
+  const absent = totalStudents - present;
+
+  const attendanceMarked =
+    Number(todayStats?.total_marked || 0);
+
+  const percentage = totalStudents
+    ? Math.round((present / totalStudents) * 100)
+    : 0;
+
+  return {
+    date: targetDate,
+    total_students: totalStudents,
+    attendance_marked: attendanceMarked,
+    present_today: present,
+    absent_today: absent,
+    attendance_percentage: percentage,
+    low_attendance_students: Number(lowAttendance || 0)
+  };
 }
 
 };

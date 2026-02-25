@@ -27,4 +27,12 @@ app.get(
   "/attendance/class/:classId/summary",
   attendanceController.getClassAttendanceSummary
 );
+app.get(
+  "/attendance/class/:classId/defaulters",
+  attendanceController.getDefaulters
+);
+app.get(
+  "/dashboard/attendance",
+  attendanceController.getAttendanceDashboard
+);
 }

@@ -76,6 +76,33 @@ async getClassAttendanceSummary(request: FastifyRequest, reply: FastifyReply) {
   } catch (error: any) {
     reply.status(400).send({ error: error.message });
   }
+},
+async getDefaulters(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const { classId } = request.params as any;
+    const { threshold } = request.query as any;
+
+    const result = await attendanceService.getDefaulters(
+      Number(classId),
+      threshold ? Number(threshold) : 75
+    );
+
+    reply.send(result);
+  } catch (error: any) {
+    reply.status(400).send({ error: error.message });
+  }
+},
+async getAttendanceDashboard(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const { date } = request.query as any;
+
+    const result =
+      await attendanceService.getAttendanceDashboard(date);
+
+    reply.send(result);
+  } catch (error: any) {
+    reply.status(400).send({ error: error.message });
+  }
 }
 
 };

@@ -78,6 +78,68 @@ async getClassAttendanceSummary(classId: number, date: string) {
   );
 
   return rows[0];
-}
+},
+async getDefaultersByClass(classId: number, threshold: number) {
+  const [rows]: any = await db.query(
+    `
+    SELECT 
+      s.id AS student_id,
+      s.name,
+      ROUND(
+        (SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) 
+        / COUNT(*)) * 100, 2
+      ) AS percentage
+    FROM attendance a
+    JOIN students s ON s.id = a.student_id
+    WHERE a.class_id = ?
+    GROUP BY s.id
+    HAVING percentage < ?
+    `,
+    [classId, threshold]
+  );
+
+  return rows;
+},
+
+async getTotalStudents() {
+  const [rows]: any = await db.query(
+    "SELECT COUNT(*) AS total_students FROM students"
+  );
+
+  return rows[0].total_students;
+},
+
+async getTodayAttendanceStats(date: string) {
+  const [rows]: any = await db.query(
+    `
+    SELECT 
+      COUNT(*) AS total_marked,
+      SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) AS present_today,
+      SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) AS absent_today
+    FROM attendance
+    WHERE date = ?
+    `,
+    [date]
+  );
+
+  return rows[0];
+},
+
+async getLowAttendanceCount(threshold: number) {
+  const [rows]: any = await db.query(
+    `
+    SELECT COUNT(*) AS low_count FROM (
+      SELECT student_id,
+        (SUM(CASE WHEN status='present' THEN 1 ELSE 0 END)/COUNT(*))*100 AS percentage
+      FROM attendance
+      GROUP BY student_id
+      HAVING percentage < ?
+    ) AS sub
+    `,
+    [threshold]
+  );
+
+  return rows[0].low_count;
+},
 
 };
